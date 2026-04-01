@@ -1,0 +1,9 @@
+[MASTER]
+ignore=migrations
+
+[MESSAGES CONTROL]
+disable=C0111,  # missing-docstring
+        C0103,  # invalid-name
+        R0903,  # too-few-public-methods
+        W0511,  # fixme
+        missing-module-docstring,
