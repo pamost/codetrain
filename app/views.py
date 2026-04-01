@@ -1,6 +1,9 @@
+from datetime import datetime
 from django.shortcuts import render
 
-from django.http import HttpResponse
-
-def home_page(reguest):
-    return HttpResponse("Home page")
+def home_page(request):
+    context = {
+        'title': 'СodeTrain - тренажер для изучения языков программирования',
+        'current_year': datetime.now().year
+    }
+    return render(request, 'app/home.html', context)

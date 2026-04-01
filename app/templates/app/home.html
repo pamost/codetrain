@@ -1,0 +1,62 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Изучайте языки программирования с карточками и тестами{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="text-center mb-16">
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl text-gray-900 leading-tight">
+        Осваивайте языки <span class="text-cyan-700">программирования</span>
+        <br>с помощью интерактивных карточек
+    </h1>
+    <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+        Создавайте карточки с терминами, определениями и иллюстрациями. Учитесь эффективно с помощью тестов и повторений.
+    </p>
+    <!-- Кнопки удалены -->
+</div>
+
+<!-- Список языков (заглушка с двумя карточками) -->
+<div id="languages" class="max-w-4xl mx-auto mb-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <!-- Карточка Golang -->
+        <a href="#" class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 text-center border border-gray-100">
+            <img src="https://raw.githubusercontent.com/golang-samples/gopher-vector/master/gopher.svg" 
+                alt="Gopher" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <h3 class="text-2xl font-semibold text-gray-800 group-hover:text-cyan-700 transition">Golang</h3>
+            <p class="text-gray-500 mt-2">Параллелизм, каналы, эффективная разработка</p>
+        </a>
+        <!-- Карточка JavaScript -->
+        <a href="#" class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 text-center border border-gray-100">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" 
+                alt="JavaScript" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <h3 class="text-2xl font-semibold text-gray-800 group-hover:text-cyan-700 transition">JavaScript</h3>
+            <p class="text-gray-500 mt-2">Фронтенд, бэкенд, асинхронность</p>
+        </a>
+    </div>
+    <p class="text-center text-gray-400 mt-8 text-sm">Больше языков будет доступно позже</p>
+</div>
+
+<!-- Статистика (уменьшенная и более широкая) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+        <i data-lucide="code-2" class="w-8 h-8 text-cyan-700 mx-auto mb-1"></i>
+        <div class="text-2xl font-bold text-cyan-700">2+</div>
+        <div class="text-gray-600 text-sm">Языков программирования</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+        <i data-lucide="book-open" class="w-8 h-8 text-cyan-700 mx-auto mb-1"></i>
+        <div class="text-2xl font-bold text-cyan-700">10+</div>
+        <div class="text-gray-600 text-sm">Тем</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+        <i data-lucide="layers" class="w-8 h-8 text-cyan-700 mx-auto mb-1"></i>
+        <div class="text-2xl font-bold text-cyan-700">20+</div>
+        <div class="text-gray-600 text-sm">Карточек</div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+        <i data-lucide="thumbs-up" class="w-8 h-8 text-cyan-700 mx-auto mb-1"></i>
+        <div class="text-2xl font-bold text-cyan-700">98%</div>
+        <div class="text-gray-600 text-sm">Довольных студентов</div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-input, .form-textarea, .form-select {
+            @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <nav class="bg-cyan-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Логотип слева -->
+                <div class="flex-shrink-0">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold hover:text-cyan-200 transition flex items-center gap-2">
+                        <i data-lucide="code-2" class="text-white" style="stroke-width: 4px;"></i>
+                        <span>{{ title }}</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:block">
+                    <div class="relative group">
+                        <button class="hover:text-cyan-200 transition inline-flex items-center gap-1 px-3 py-2 rounded-md">
+                            <i data-lucide="square-mouse-pointer"></i>
+                            <span>Выбрать тренажёр</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div class="absolute left-0 mt-0 pt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-cyan-50">Golang</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-cyan-50">JavaScript</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="text-white hover:text-cyan-200 transition">
+                        <i data-lucide="circle-question-mark" class="w-5 h-5"></i>
+                    </a>
+                    <div class="md:hidden">
+                        <button class="text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% if messages %}
+            <div class="mb-8 space-y-2">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 text-gray-500 text-center py-4 mt-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; <span id="current-year">{{ current_year }}</span> {{ title }}</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
