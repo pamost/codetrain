@@ -4,7 +4,6 @@ def user_context(request):
     user_id = request.session.get('user_id')
     username = None
     if user_id:
-        from .models import User
         try:
             user = User.objects.get(id=user_id)
             username = user.username
