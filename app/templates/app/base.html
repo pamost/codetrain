@@ -40,11 +40,12 @@
                 <div class="flex-shrink-0">
                     <a href="{% url 'home' %}" class="text-2xl hover:text-cyan-200 transition flex items-center gap-2">
                         <i data-lucide="train-front" class="text-white" style="stroke-width: 2px;"></i>
-                        <span>{{ app_name }} - {{ app_description }}</span>
+                        <span>{{ app_name }}</span>
+                        <span class="hidden lg:inline">- {{ app_description }}</span>
                     </a>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-6">
+                <div class="hidden md:flex items-center space-x-6 ml-auto mr-6">
                     <div class="relative group">
                         <button class="hover:text-cyan-200 transition inline-flex items-center gap-1 px-3 py-2 rounded-md">
                             <i data-lucide="square-mouse-pointer"></i>
