@@ -1,0 +1,47 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-5">
+                <label class="block text-gray-700 font-medium mb-2">Язык</label>
+                <select name="language" class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                    {% for lang in form.language.field.queryset %}
+                        <option value="{{ lang.id }}" {% if form.language.value|stringformat:"i" == lang.id|stringformat:"i" %}selected{% endif %}>{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.language.errors %}<p class="text-red-500 text-sm mt-1">{{ form.language.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="mb-5">
+                <label class="block text-gray-700 font-medium mb-2">Термин</label>
+                <input type="text" name="term" value="{{ form.term.value|default:'' }}" class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                {% if form.term.errors %}<p class="text-red-500 text-sm mt-1">{{ form.term.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="mb-5">
+                <label class="block text-gray-700 font-medium mb-2">Определение</label>
+                <textarea name="definition" rows="5" class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">{{ form.definition.value|default:'' }}</textarea>
+                {% if form.definition.errors %}<p class="text-red-500 text-sm mt-1">{{ form.definition.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="mb-5">
+                <label class="block text-gray-700 font-medium mb-2">URL иллюстрации (необязательно)</label>
+                <input type="url" name="image_url" value="{{ form.image_url.value|default:'' }}" class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                {% if form.image_url.errors %}<p class="text-red-500 text-sm mt-1">{{ form.image_url.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="mb-5">
+                <label class="block text-gray-700 font-medium mb-2">Заметки (необязательно)</label>
+                <textarea name="notes" rows="3" class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">{{ form.notes.value|default:'' }}</textarea>
+                {% if form.notes.errors %}<p class="text-red-500 text-sm mt-1">{{ form.notes.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="flex space-x-3">
+                <button type="submit" class="bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg transition">Сохранить</button>
+                <a href="javascript:history.back()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

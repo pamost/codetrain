@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import User, Language, Topic
+from app.models import User, Language, Topic, Card
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -21,3 +21,19 @@ class TopicAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ('order',)
+
+@admin.register(Card)
+class CardAdmin(admin.ModelAdmin):
+    list_display = ('term', 'language', 'created_by', 'is_approved', 'created_at')
+    list_filter = ('language', 'is_approved', 'created_at')
+    search_fields = ('term', 'definition')
+    actions = ['approve_cards']
+
+    def approve_cards(self, request, queryset):
+        queryset.update(is_approved=True)
+    approve_cards.short_description = "Одобрить выбранные карточки"
+
+    def save_model(self, request, obj, form, change):
+        if not change:  # новая карточка через админку
+            obj.is_approved = True
+        super().save_model(request, obj, form, change)

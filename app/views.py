@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from app.models import User, Language, Topic
+from app.models import User, Language, Topic, Card, RememberedCard
+from app.forms import CardForm
 
 def home_page(request):
     languages = Language.objects.all()
@@ -24,9 +25,28 @@ def home_page(request):
     }
     return render(request, 'app/home.html', context)
 
+import markdown
+from datetime import datetime
+from django.shortcuts import render, get_object_or_404
+from .models import Language, Topic, Card, RememberedCard
+
 def topics(request, lang_slug):
     language = get_object_or_404(Language, slug=lang_slug)
     topics = language.topics.all().order_by('order', 'name')
+
+    # --- Получение карточек языка с автором ---
+    # Базовый запрос: только одобренные карточки, подгружаем автора (created_by)
+    cards_qs = language.cards.filter(is_approved=True).select_related('created_by')
+    
+    user_id = request.session.get('user_id')
+    if user_id:
+        # Исключаем карточки, которые пользователь уже запомнил
+        remembered_ids = RememberedCard.objects.filter(user_id=user_id).values_list('card_id', flat=True)
+        cards = cards_qs.exclude(id__in=remembered_ids)
+    else:
+        cards = cards_qs
+
+    # --- Навигация по темам ---
     topics_list = list(topics)
     selected_topic_id = request.GET.get('topic_id')
     selected_topic = None
@@ -48,12 +68,14 @@ def topics(request, lang_slug):
         if len(topics_list) > 1:
             next_topic = topics_list[1]
 
+    # --- Преобразование Markdown в HTML для выбранной темы ---
     if selected_topic:
         selected_topic.html_description = markdown.markdown(
             selected_topic.description or '',
             extensions=['fenced_code', 'codehilite']
         )
 
+    # --- Контекст ---
     context = {
         'title': f'{language.name} - темы',
         'current_year': datetime.now().year,
@@ -62,10 +84,80 @@ def topics(request, lang_slug):
         'selected_topic': selected_topic,
         'prev_topic': prev_topic,
         'next_topic': next_topic,
+        'cards': cards,
+        'user_id': user_id,
         'app_name': 'CodeTrain',
         'app_description': 'тренажер для программистов',
     }
     return render(request, 'app/topics.html', context)
+
+def card_create(request):
+    if request.method == 'POST':
+        form = CardForm(request.POST)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.is_approved = False
+            if 'user_id' in request.session:
+                try:
+                    user = User.objects.get(id=request.session['user_id'])
+                    card.created_by = user
+                except User.DoesNotExist:
+                    pass
+            card.save()
+            messages.success(request, 'Карточка отправлена на модерацию. Она появится после проверки администратором.')
+            return redirect('topics', lang_slug=card.language.slug)
+    else:
+        initial = {}
+        language_id = request.GET.get('language')
+        if language_id:
+            initial['language'] = language_id
+        form = CardForm(initial=initial)
+    return render(request, 'app/card_form.html', {'form': form, 'title': 'Создать карточку'})
+
+@csrf_exempt
+def remember_card(request):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        try:
+            data = json.loads(request.body)
+            card_id = data.get('card_id')
+        except:
+            return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return JsonResponse({'status': 'error', 'message': 'Not authenticated'}, status=401)
+
+        try:
+            user = User.objects.get(id=user_id)
+            card = Card.objects.get(id=card_id)
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+        except Card.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Card not found'}, status=404)
+
+        obj, created = RememberedCard.objects.get_or_create(user=user, card=card)
+        if created:
+            return JsonResponse({'status': 'ok'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Already remembered'}, status=400)
+    return JsonResponse({'status': 'error'}, status=400)
+
+@csrf_exempt
+def unremember_card(request):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        try:
+            data = json.loads(request.body)
+            card_id = data.get('card_id')
+        except:
+            return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return JsonResponse({'status': 'error'}, status=401)
+
+        RememberedCard.objects.filter(user_id=user_id, card_id=card_id).delete()
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error'}, status=400)
 
 @csrf_exempt
 def set_user(request):
@@ -114,13 +206,16 @@ def set_user(request):
     
 def user_stats(request):
     if 'user_id' not in request.session:
-        return redirect('home')
-    # user = get_object_or_404(User, id=request.session['user_id'])
-    # attempts = QuizAttempt.objects.filter(user=user).select_related('topic')
+        return redirect('set_user')
+    user = get_object_or_404(User, id=request.session['user_id'])
+    # attempts = QuizAttempt.objects.filter(user=user).select_related('topic').order_by('-created_at')
+    remembered_cards = RememberedCard.objects.filter(user=user).select_related('card').order_by('-created_at')
     context = {
         'title': 'Моя статистика',
         'current_year': datetime.now().year,
         # 'attempts': attempts,
+        'remembered_cards': remembered_cards,
+        'remembered_cards_count': remembered_cards.count(),
         'app_name': 'CodeTrain',
         'app_description': 'тренажер для программистов',
     }

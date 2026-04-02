@@ -30,5 +30,9 @@ urlpatterns = [
     path('get-user-data/', views.get_user_data, name='get_user_data'),
     path('update-user/', views.update_user, name='update_user'),
 
+    path('card/create/', views.card_create, name='card_create'),
+    path('remember-card/', views.remember_card, name='remember_card'),
+    path('unremember-card/', views.unremember_card, name='unremember_card'),
+
     path('<slug:lang_slug>/', views.topics, name='topics'),
 ]

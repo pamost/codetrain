@@ -30,6 +30,64 @@
         .modal.active {
             display: flex;
         }
+
+        /* Стили для карточек с переворотом */
+        .card-flip {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-flip-inner {
+            position: relative;
+            width: 100%;
+            min-height: 140px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card-flip.flipped .card-flip-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-front {
+            background-color: #ecfeff;  /* cyan-50 */
+            border: 1px solid #cffafe;  /* cyan-100 */
+            color: #155e75;             /* cyan-800 */
+            font-weight: 600;
+        }
+        .card-back {
+            background-color: #cffafe;  /* cyan-100 */
+            border: 1px solid #a5f3fc;  /* cyan-200 */
+            color: #374151;             /* gray-700 */
+            transform: rotateY(180deg);
+        }
+
+        /* Карточки, созданные текущим пользователем */
+        .user-card .card-front {
+            background-color: #fffbeb;  /* amber-50 */
+            border-color: #fde68a;      /* amber-200 */
+        }
+        .user-card .card-back {
+            background-color: #fef3c7;  /* amber-100 */
+            border-color: #fcd34d;      /* amber-300 */
+        }
+        .user-card .card-front .font-semibold {
+            color: #b45309;  /* amber-700 */
+        }
+
         /* Мобильное меню */
         .mobile-menu {
             display: none;
@@ -160,7 +218,7 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <a href="#" class="hover:text-cyan-200 transition inline-flex items-center gap-1">
+                    <a href="{% url 'card_create' %}?language={{ language.id }}" class="hover:text-cyan-200 transition inline-flex items-center gap-1">
                         <i data-lucide="plus-circle"></i>
                         <span class="hidden sm:inline">Добавить карточку</span>
                     </a>
@@ -421,6 +479,72 @@
                 .then(data => { if (data.status === 'ok') location.reload(); });
             });
         }
+
+        // Обработка переворота карточек
+        document.querySelectorAll('[data-flip-card]').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('flipped');
+            });
+        });
+
+        // Обработка кнопок "Запомнил" на странице тем
+        document.querySelectorAll('.remember-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const cardDiv = this.closest('[data-flip-card]');
+                const cardId = cardDiv.getAttribute('data-card-id');
+                if (!cardId) return;
+
+                fetch('/remember-card/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ card_id: cardId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        cardDiv.style.transition = 'opacity 0.2s';
+                        cardDiv.style.opacity = '0';
+                        setTimeout(() => cardDiv.remove(), 200);
+                    } else {
+                        alert(data.message || 'Ошибка при запоминании');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+        // Обработка кнопок "Забыть" на странице статистики (делегирование)
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.unremember-btn');
+            if (!btn) return;
+            e.preventDefault();
+            const cardId = btn.getAttribute('data-card-id');
+            if (!cardId) return;
+            fetch('/unremember-card/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ card_id: cardId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    location.reload();
+                } else {
+                    alert('Ошибка при забывании');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 </html>

@@ -70,20 +70,41 @@
         {% endif %}
     </div>
 
-    <!-- Правая колонка: заглушка карточек -->
+    <!-- Правая колонка-->
     <div class="lg:w-1/4">
-        <div class="bg-white rounded-xl shadow-sm p-4">
-            <h2 class="text-xl font-bold text-gray-800 mb-3">Карточки темы</h2>
-            <p class="text-gray-400 text-sm mb-4">Скоро здесь появятся карточки для запоминания терминов.</p>
-            <div class="border border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <i data-lucide="layers" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
-                <p class="text-gray-500 text-sm">Пример карточки:<br><strong>goroutine</strong> — лёгкий поток</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-gray-100">
-                <a href="#" class="text-cyan-600 hover:underline text-sm flex items-center gap-1">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Добавить карточку
+        <div class="bg-white rounded-xl shadow-sm p-4 sticky top-20">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Карточки языка</h2>
+            {% if cards %}
+                <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+                    {% for card in cards %}
+                        <div class="card-flip {% if user_id and card.created_by.id == user_id %}user-card{% endif %}" data-flip-card data-card-id="{{ card.id }}">
+                            <div class="card-flip-inner" style="min-height: 140px;">
+                                <div class="card-front flex items-center justify-center h-full">
+                                    <div class="font-semibold text-cyan-800 text-center">{{ card.term }}</div>
+                                </div>
+                                <div class="card-back flex flex-col items-center justify-between h-full p-3">
+                                    <div class="text-gray-700 text-sm text-center flex-grow">{{ card.definition|truncatewords:20 }}</div>
+                                    {% if user_id %}
+                                    <button class="remember-btn mt-2 bg-cyan-600 hover:bg-cyan-700 text-white text-xs px-3 py-1 rounded-full transition">
+                                        <i data-lucide="check" class="w-3 h-3 inline"></i> Запомнил
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <a href="{% url 'card_create' %}?language={{ language.id }}" class="text-cyan-600 hover:underline text-sm flex items-center gap-1">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Добавить карточку
+                    </a>
+                </div>
+            {% else %}
+                <p class="text-gray-400 text-sm mb-3">Нет карточек для этого языка.</p>
+                <a href="{% url 'card_create' %}?language={{ language.id }}" class="text-cyan-600 hover:underline text-sm flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Добавить первую карточку
                 </a>
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
