@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import User, Language, Topic, Card
+from app.models import User, Language, Topic, Card, Question
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -37,3 +37,14 @@ class CardAdmin(admin.ModelAdmin):
         if not change:  # новая карточка через админку
             obj.is_approved = True
         super().save_model(request, obj, form, change)
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('text', 'topic', 'correct_option')
+    list_filter = ('topic__language', 'topic')
+    search_fields = ('text',)
+    fieldsets = (
+        (None, {
+            'fields': ('topic', 'text', ('option1', 'option2'), ('option3', 'option4'), 'correct_option', 'explanation')
+        }),
+    )

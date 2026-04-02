@@ -34,5 +34,8 @@ urlpatterns = [
     path('remember-card/', views.remember_card, name='remember_card'),
     path('unremember-card/', views.unremember_card, name='unremember_card'),
 
+    path('quiz/<int:topic_id>/', views.topic_quiz, name='topic_quiz'),
+    path('quiz-result/', views.quiz_result, name='quiz_result'),
+
     path('<slug:lang_slug>/', views.topics, name='topics'),
 ]

@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'app.context_processors.user_context',
                 'app.context_processors.languages_context',
+                'app.context_processors.app_info', 
             ],
         },
     },

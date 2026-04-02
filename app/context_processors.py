@@ -18,3 +18,9 @@ def user_context(request):
 
 def languages_context(request):
     return {'languages': Language.objects.all()}
+
+def app_info(request):
+    return {
+        'app_name': 'CodeTrain',
+        'app_description': 'тренажер для программистов',
+    }

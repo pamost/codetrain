@@ -71,3 +71,34 @@ class RememberedCard(models.Model):
         unique_together = ('user', 'card')
         verbose_name = "Запомненная карточка"
         verbose_name_plural = "Запомненные карточки"
+
+class Question(models.Model):
+    topic = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='questions')
+    text = models.TextField(verbose_name="Текст вопроса")
+    option1 = models.CharField(max_length=200, verbose_name="Вариант 1")
+    option2 = models.CharField(max_length=200, verbose_name="Вариант 2")
+    option3 = models.CharField(max_length=200, verbose_name="Вариант 3")
+    option4 = models.CharField(max_length=200, verbose_name="Вариант 4")
+    correct_option = models.IntegerField(
+        choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4')],
+        verbose_name="Правильный вариант"
+    )
+    explanation = models.TextField(blank=True, verbose_name="Пояснение")
+
+    class Meta:
+        verbose_name = "Вопрос"
+        verbose_name_plural = "Вопросы"
+
+    def __str__(self):
+        return self.text[:50]
+    
+class QuizAttempt(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='attempts')
+    topic = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='attempts')
+    score = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Попытка теста"
+        verbose_name_plural = "Попытки тестов"
