@@ -4,22 +4,21 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="text-center mb-16">
+<div class="text-center mb-12">
     <h1 class="text-4xl sm:text-5xl lg:text-6xl text-gray-900 leading-tight">
         Осваивайте языки <span class="text-cyan-700">программирования</span><br>с помощью интерактивного тренажера
     </h1>
-    <p class="mt-4 text-xl text-gray-600 max-w-4xl mx-auto">
+    <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">
         Просматривайте карточки с терминами, определениями и иллюстрациями. Учитесь эффективно с помощью тестов и повторений.
     </p>
-    <!-- Кнопки удалены -->
 </div>
 
-<!-- Список языков  -->
-<div id="languages" class="max-w-4xl mx-auto mb-16">
+<!-- Список языков (без заголовка) -->
+<div id="languages" class="max-w-5xl mx-auto mb-12">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {% for lang in languages %}
         <a href="{% url 'topics' lang.slug %}" 
-        class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 text-center border border-gray-100">
+           class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 text-center border border-gray-100">
             {% if lang.logo_url %}
                 <img src="{{ lang.logo_url }}" alt="{{ lang.name }}" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain">
             {% else %}
@@ -28,40 +27,53 @@
             <h3 class="text-2xl font-semibold text-gray-800 group-hover:text-cyan-700 transition">{{ lang.name }}</h3>
             <p class="text-gray-500 mt-2">{{ lang.description|truncatewords:15 }}</p>
         </a>
+        {% empty %}
+        <p class="col-span-full text-center">Языки пока не добавлены.</p>
         {% endfor %}
     </div>
-    <p class="text-center text-gray-400 mt-8 text-sm">Больше языков будет доступно позже</p>
+    <p class="text-center text-gray-400 mt-6 text-sm">Больше языков будет доступно позже</p>
 </div>
 
 <!-- Статистика -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-10">
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
-            <i data-lucide="code-2" class="w-6 h-6 text-cyan-700"></i>
-            <span class="text-2xl font-bold text-cyan-700">{{ languages.count }}</span>
+            <i data-lucide="code-2" class="w-7 h-7 text-cyan-700"></i>
+            <span class="text-3xl font-bold text-cyan-700">{{ languages.count }}</span>
         </div>
         <div class="text-gray-600 text-sm">Языков программирования</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
-            <i data-lucide="book-open" class="w-6 h-6 text-cyan-700"></i>
-            <span class="text-2xl font-bold text-cyan-700">{{ topics.count }}</span>
+            <i data-lucide="book-open" class="w-7 h-7 text-cyan-700"></i>
+            <span class="text-3xl font-bold text-cyan-700">{{ topics.count }}</span>
         </div>
-        <div class="text-gray-600 text-sm">Тем в категории</div>
+        <div class="text-gray-600 text-sm">Тем категорий</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
-            <i data-lucide="layers" class="w-6 h-6 text-cyan-700"></i>
-            <span class="text-2xl font-bold text-cyan-700">100</span>
+            <i data-lucide="layers" class="w-7 h-7 text-cyan-700"></i>
+            <span class="text-3xl font-bold text-cyan-700">100</span>
         </div>
         <div class="text-gray-600 text-sm">Карточек для запоминания</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
-            <i data-lucide="thumbs-up" class="w-6 h-6 text-cyan-700"></i>
-            <span class="text-2xl font-bold text-cyan-700">{{ users_count }}</span>
+            <i data-lucide="thumbs-up" class="w-7 h-7 text-cyan-700"></i>
+            <span class="text-3xl font-bold text-cyan-700">{{ users_count|default:"98" }}</span>
         </div>
-        <div class="text-gray-600 text-sm">Довольных тренерующихся</div>
+        <div class="text-gray-600 text-sm">Довольных изучающих</div>
+    </div>
+</div>
+
+<!-- Случайный факт (внешнее API) -->
+<div class="max-w-5xl mx-auto mt-0">
+    <div class="bg-gradient-to-r from-cyan-100 to-blue-100 border border-cyan-400 rounded-xl p-4 text-center shadow-md">
+        <div class="flex items-center justify-center gap-2 text-cyan-800">
+            <i data-lucide="lightbulb" class="w-6 h-6"></i>
+            <span class="font-semibold">Интересный факт:</span>
+        </div>
+        <p id="random-fact" class="text-gray-800 mt-1 text-base md:text-lg font-medium">Загрузка...</p>
     </div>
 </div>
 {% endblock %}

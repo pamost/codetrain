@@ -1,5 +1,4 @@
 import json
-
 from datetime import datetime
 from django.urls import reverse
 import markdown
@@ -24,11 +23,6 @@ def home_page(request):
         'users_count': users_count
     }
     return render(request, 'app/home.html', context)
-
-import markdown
-from datetime import datetime
-from django.shortcuts import render, get_object_or_404
-from .models import Language, Topic, Card, RememberedCard
 
 def topics(request, lang_slug):
     language = get_object_or_404(Language, slug=lang_slug)
@@ -97,14 +91,14 @@ def card_create(request):
         if form.is_valid():
             card = form.save(commit=False)
             card.is_approved = False
-            if 'user_id' in request.session:
+            user_id = request.session.get('user_id')
+            if user_id:
                 try:
-                    user = User.objects.get(id=request.session['user_id'])
-                    card.created_by = user
+                    card.created_by = User.objects.get(id=user_id)
                 except User.DoesNotExist:
                     pass
             card.save()
-            messages.success(request, 'Карточка отправлена на модерацию. Она появится после проверки администратором.')
+            messages.success(request, 'Карточка отправлена на модерацию.')
             return redirect('topics', lang_slug=card.language.slug)
     else:
         initial = {}
@@ -112,7 +106,15 @@ def card_create(request):
         if language_id:
             initial['language'] = language_id
         form = CardForm(initial=initial)
-    return render(request, 'app/card_form.html', {'form': form, 'title': 'Создать карточку'})
+    
+    context = {
+        'form': form,
+        'title': 'Добавить карточку',
+        'current_year': datetime.now().year,
+        'app_name': 'CodeTrain',
+        'app_description': 'тренажер для программистов',
+    }
+    return render(request, 'app/card_form.html', context)
 
 @csrf_exempt
 def remember_card(request):

@@ -195,3 +195,45 @@ document.body.addEventListener('click', function(e) {
         }
     });
 });
+
+// Функция загрузки случайного факта о программировании
+function loadRandomFact() {
+    const factElement = document.getElementById('random-fact');
+    if (!factElement) return;
+
+    // Используем публичное API с цитатами о технологиях
+    fetch('https://api.quotable.io/quotes/random?tags=technology|programming')
+        .then(response => {
+            if (!response.ok) throw new Error('API error');
+            return response.json();
+        })
+        .then(data => {
+            if (data && data[0] && data[0].content) {
+                const quote = data[0].content;
+                const author = data[0].author;
+                factElement.textContent = `"${quote}" — ${author}`;
+            } else {
+                fallbackFact();
+            }
+        })
+        .catch(() => fallbackFact());
+}
+
+function fallbackFact() {
+    const facts = [
+        'Язык Go был создан в Google для решения проблем масштабируемости.',
+        'JavaScript был создан за 10 дней в 1995 году.',
+        'Go автоматически форматирует код с помощью `go fmt`.',
+        'JavaScript изначально назывался Mocha, затем LiveScript.',
+        'В Go нет исключений в классическом виде, используется механизм ошибок.',
+        'Первоначальное имя JavaScript — Mocha.'
+    ];
+    const randomFact = facts[Math.floor(Math.random() * facts.length)];
+    const factElement = document.getElementById('random-fact');
+    if (factElement) factElement.textContent = randomFact;
+}
+
+// Загружаем факт при загрузке страницы
+if (document.getElementById('random-fact')) {
+    loadRandomFact();
+}
