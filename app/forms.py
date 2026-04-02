@@ -1,6 +1,7 @@
 from django import forms
 from app.models import Card, Language
 
+
 class CardForm(forms.ModelForm):
     language = forms.ModelChoiceField(
         queryset=Language.objects.all().order_by('name'),

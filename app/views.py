@@ -1,38 +1,39 @@
 import json
+import random
 from datetime import datetime
-from django.urls import reverse
+
 import markdown
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-import random
 
-from app.models import User, Language, Topic, Card, RememberedCard, QuizAttempt
 from app.forms import CardForm
+from app.models import User, Language, Topic, Card, RememberedCard, QuizAttempt
 
 def home_page(request):
     languages = Language.objects.all()
-    topics = Topic.objects.all()
+    all_topics  = Topic.objects.all()
     users_count = User.objects.count()
     context = {
         'app_name': 'СodeTrain',
         'app_description': 'тренажер языков программирования',
         'current_year': datetime.now().year,
         'languages': languages,
-        'topics': topics,
+        'topics': all_topics,
         'users_count': users_count
     }
     return render(request, 'app/home.html', context)
 
-def topics(request, lang_slug):
+def topics(request, lang_slug): # pylint: disable=too-many-return-statements
     language = get_object_or_404(Language, slug=lang_slug)
-    topics = language.topics.all().order_by('order', 'name')
+    all_topics = language.topics.all().order_by('order', 'name')
 
     # --- Получение карточек языка с автором ---
     # Базовый запрос: только одобренные карточки, подгружаем автора (created_by)
     cards_qs = language.cards.filter(is_approved=True).select_related('created_by')
-    
+
     user_id = request.session.get('user_id')
     if user_id:
         # Исключаем карточки, которые пользователь уже запомнил
@@ -42,7 +43,7 @@ def topics(request, lang_slug):
         cards = cards_qs
 
     # --- Навигация по темам ---
-    topics_list = list(topics)
+    topics_list = list(all_topics)
     selected_topic_id = request.GET.get('topic_id')
     selected_topic = None
     prev_topic = None
@@ -75,7 +76,7 @@ def topics(request, lang_slug):
         'title': f'{language.name} - темы',
         'current_year': datetime.now().year,
         'language': language,
-        'topics': topics,
+        'topics': all_topics ,
         'selected_topic': selected_topic,
         'prev_topic': prev_topic,
         'next_topic': next_topic,
@@ -105,7 +106,7 @@ def card_create(request):
         if language_id:
             initial['language'] = language_id
         form = CardForm(initial=initial)
-    
+
     context = {
         'form': form,
         'title': 'Добавить карточку',
@@ -114,12 +115,12 @@ def card_create(request):
     return render(request, 'app/card_form.html', context)
 
 @csrf_exempt
-def remember_card(request):
+def remember_card(request): # pylint: disable=too-many-return-statements
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
             data = json.loads(request.body)
             card_id = data.get('card_id')
-        except:
+        except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
         user_id = request.session.get('user_id')
@@ -134,7 +135,7 @@ def remember_card(request):
         except Card.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Card not found'}, status=404)
 
-        obj, created = RememberedCard.objects.get_or_create(user=user, card=card)
+        _, created = RememberedCard.objects.get_or_create(user=user, card=card)
         if created:
             return JsonResponse({'status': 'ok'})
         else:
@@ -147,7 +148,7 @@ def unremember_card(request):
         try:
             data = json.loads(request.body)
             card_id = data.get('card_id')
-        except:
+        except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
         user_id = request.session.get('user_id')
@@ -200,7 +201,7 @@ def set_user(request):
             'next': request.GET.get('next', ''),
         }
         return render(request, 'app/set_user.html', context)
-    
+
 def user_stats(request):
     if 'user_id' not in request.session:
         return redirect('set_user')
@@ -294,7 +295,7 @@ def topic_quiz(request, topic_id):
             'questions': questions,
         }
         return render(request, 'app/quiz_take.html', context)
-    
+
 def quiz_result(request):
     result = request.session.get('quiz_result')
     if not result:

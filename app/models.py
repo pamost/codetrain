@@ -61,7 +61,8 @@ class Card(models.Model):
 
     def __str__(self):
         return str(self.term)
-    
+
+
 class RememberedCard(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='remembered_cards')
     card = models.ForeignKey('Card', on_delete=models.CASCADE, related_name='remembered_by')
@@ -71,6 +72,7 @@ class RememberedCard(models.Model):
         unique_together = ('user', 'card')
         verbose_name = "Запомненная карточка"
         verbose_name_plural = "Запомненные карточки"
+
 
 class Question(models.Model):
     topic = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='questions')
@@ -90,8 +92,9 @@ class Question(models.Model):
         verbose_name_plural = "Вопросы"
 
     def __str__(self):
-        return self.text[:50]
-    
+        return str(self.text)[:50]
+
+
 class QuizAttempt(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='attempts')
     topic = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='attempts')

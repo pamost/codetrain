@@ -1,4 +1,5 @@
 [MASTER]
+init-hook='import os; os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")'
 ignore=migrations
 load-plugins=pylint_django
 
@@ -7,3 +8,7 @@ disable=C0111,  # missing-docstring
         C0103,  # invalid-name
         R0903,  # too-few-public-methods
         W0511,  # fixme
+        R1705,  # Unnecessary "else" after "return"
+
+[FORMAT]
+max-line-length=120

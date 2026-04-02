@@ -45,6 +45,9 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ('text',)
     fieldsets = (
         (None, {
-            'fields': ('topic', 'text', ('option1', 'option2'), ('option3', 'option4'), 'correct_option', 'explanation')
+            'fields': ('topic', 'text', 
+                ('option1', 'option2'),
+                ('option3', 'option4'),
+            'correct_option', 'explanation')
         }),
     )
