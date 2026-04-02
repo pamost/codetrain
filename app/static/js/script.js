@@ -201,20 +201,11 @@ function loadRandomFact() {
     const factElement = document.getElementById('random-fact');
     if (!factElement) return;
 
-    // Используем публичное API с цитатами о технологиях
-    fetch('https://api.quotable.io/quotes/random?tags=technology|programming')
-        .then(response => {
-            if (!response.ok) throw new Error('API error');
-            return response.json();
-        })
+    // Альтернативное API: Programming Quotes
+    fetch('https://uselessfacts.jsph.pl/random.json?language=en')
+        .then(response => response.json())
         .then(data => {
-            if (data && data[0] && data[0].content) {
-                const quote = data[0].content;
-                const author = data[0].author;
-                factElement.textContent = `"${quote}" — ${author}`;
-            } else {
-                fallbackFact();
-            }
+            factElement.textContent = data.text;
         })
         .catch(() => fallbackFact());
 }
@@ -234,6 +225,8 @@ function fallbackFact() {
 }
 
 // Загружаем факт при загрузке страницы
-if (document.getElementById('random-fact')) {
-    loadRandomFact();
-}
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('random-fact')) {
+        loadRandomFact();
+    }
+});
