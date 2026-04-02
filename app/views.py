@@ -16,13 +16,15 @@ def home_page(request):
     languages = Language.objects.all()
     all_topics  = Topic.objects.all()
     users_count = User.objects.count()
+    cards_count = Card.objects.filter(is_approved=True).count()
     context = {
         'app_name': 'СodeTrain',
         'app_description': 'тренажер языков программирования',
         'current_year': datetime.now().year,
         'languages': languages,
         'topics': all_topics,
-        'users_count': users_count
+        'users_count': users_count,
+        'cards_count': cards_count,
     }
     return render(request, 'app/home.html', context)
 

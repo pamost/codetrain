@@ -39,28 +39,28 @@
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
             <i data-lucide="code-2" class="w-7 h-7 text-cyan-700"></i>
-            <span class="text-3xl font-bold text-cyan-700">{{ languages.count }}</span>
+            <span class="text-3xl font-bold text-cyan-700">{{ languages.count|default:"0" }}</span>
         </div>
         <div class="text-gray-600 text-sm">Языков программирования</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
             <i data-lucide="book-open" class="w-7 h-7 text-cyan-700"></i>
-            <span class="text-3xl font-bold text-cyan-700">{{ topics.count }}</span>
+            <span class="text-3xl font-bold text-cyan-700">{{ topics.count|default:"0" }}</span>
         </div>
         <div class="text-gray-600 text-sm">Тем категорий</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
             <i data-lucide="layers" class="w-7 h-7 text-cyan-700"></i>
-            <span class="text-3xl font-bold text-cyan-700">100</span>
+            <span class="text-3xl font-bold text-cyan-700">{{ cards_count|default:"0" }}</span>
         </div>
         <div class="text-gray-600 text-sm">Карточек для запоминания</div>
     </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
         <div class="flex items-center justify-center gap-2 mb-1">
             <i data-lucide="thumbs-up" class="w-7 h-7 text-cyan-700"></i>
-            <span class="text-3xl font-bold text-cyan-700">{{ users_count|default:"98" }}</span>
+            <span class="text-3xl font-bold text-cyan-700">{{ users_count|default:"0" }}</span>
         </div>
         <div class="text-gray-600 text-sm">Довольных изучающих</div>
     </div>
