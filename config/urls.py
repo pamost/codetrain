@@ -16,17 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import home_page, set_user, user_stats, logout_user, get_user_data, update_user
+from app import views
 
 app_name = 'app'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_page, name='home'),
-    path('set-user/', set_user, name='set_user'),
-    
-    path('user-stats/', user_stats, name='user_stats'),
-    path('logout-user/', logout_user, name='logout_user'),
-    path('get-user-data/', get_user_data, name='get_user_data'),
-    path('update-user/', update_user, name='update_user'),
+    path('', views.home_page, name='home'),
+
+    path('set-user/', views.set_user, name='set_user'),
+    path('user-stats/', views.user_stats, name='user_stats'),
+    path('logout-user/', views.logout_user, name='logout_user'),
+    path('get-user-data/', views.get_user_data, name='get_user_data'),
+    path('update-user/', views.update_user, name='update_user'),
+
+    path('<slug:lang_slug>/', views.topics, name='topics'),
 ]

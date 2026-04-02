@@ -1,0 +1,90 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ language.name }} - темы{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-6">
+    <!-- Левая колонка: меню тем -->
+    <div class="lg:w-1/4">
+        <div class="bg-white rounded-xl shadow-sm p-4 sticky top-20">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+                Темы {{ language.name }}
+            </h2>
+            <ul class="space-y-1">
+                {% for topic in topics %}
+                <li>
+                    <a href="?topic_id={{ topic.id }}" 
+                    class="block px-3 py-2 rounded-lg hover:bg-cyan-50 transition {% if selected_topic.id == topic.id %}bg-cyan-100 text-cyan-700 font-medium{% else %}text-gray-700{% endif %}">
+                        {{ topic.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Центральная колонка: содержимое темы -->
+    <div class="lg:w-2/4">
+        {% if selected_topic %}
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h1 class="text-2xl font-bold text-gray-800">{{ selected_topic.name }}</h1>
+            <div class="mt-2 prose max-w-none">
+                {{ selected_topic.html_description|safe }}
+            </div>
+
+            <!-- Навигация между темами -->
+            <div class="flex justify-between items-center mt-6">
+                <div>
+                    {% if prev_topic %}
+                    <a href="?topic_id={{ prev_topic.id }}" class="inline-flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span class="hidden sm:inline">{{ prev_topic.name }}</span>
+                    </a>
+                    {% else %}
+                    <div></div>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if next_topic %}
+                    <a href="?topic_id={{ next_topic.id }}" class="inline-flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
+                        <span class="hidden sm:inline">{{ next_topic.name }}</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Кнопка теста, если есть вопросы -->
+            {% if selected_topic.questions.exists %}
+            <div class="mt-6">
+                <a href="{% url 'topic_quiz' selected_topic.id %}" class="inline-flex items-center gap-1 bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700">
+                    <i data-lucide="clipboard-list"></i> Пройти тест
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-sm p-6 text-center text-gray-500">
+            Выберите тему из списка слева
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Правая колонка: заглушка карточек -->
+    <div class="lg:w-1/4">
+        <div class="bg-white rounded-xl shadow-sm p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Карточки темы</h2>
+            <p class="text-gray-400 text-sm mb-4">Скоро здесь появятся карточки для запоминания терминов.</p>
+            <div class="border border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <i data-lucide="layers" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+                <p class="text-gray-500 text-sm">Пример карточки:<br><strong>goroutine</strong> — лёгкий поток</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <a href="#" class="text-cyan-600 hover:underline text-sm flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Добавить карточку
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

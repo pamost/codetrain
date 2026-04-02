@@ -14,7 +14,7 @@
         .form-input, .form-textarea, .form-select {
             @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
         }
-        /* Стили для модальных окон */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -30,21 +30,123 @@
         .modal.active {
             display: flex;
         }
+        /* Мобильное меню */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            z-index: 50;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .mobile-menu.open {
+            display: block;
+        }
+        /* Блоки кода */
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .prose pre {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        /* Подсветка синтаксиса (тема friendly) */
+        .codehilite .hll { background-color: #f8f8f8; }
+        .codehilite .c { color: #8f5902; font-style: italic; }
+        .codehilite .err { color: #a40000; border: 1px solid #ef2929; }
+        .codehilite .k { color: #204a87; font-weight: bold; }
+        .codehilite .o { color: #ce5c00; font-weight: bold; }
+        .codehilite .ch { color: #8f5902; font-style: italic; }
+        .codehilite .cm { color: #8f5902; font-style: italic; }
+        .codehilite .cp { color: #8f5902; font-style: italic; }
+        .codehilite .cpf { color: #8f5902; font-style: italic; }
+        .codehilite .c1 { color: #8f5902; font-style: italic; }
+        .codehilite .cs { color: #8f5902; font-style: italic; }
+        .codehilite .gd { color: #a40000; }
+        .codehilite .ge { font-style: italic; }
+        .codehilite .gr { color: #ef2929; }
+        .codehilite .gh { color: #000080; font-weight: bold; }
+        .codehilite .gi { color: #00A000; }
+        .codehilite .go { color: #000000; font-style: italic; }
+        .codehilite .gp { color: #8f5902; }
+        .codehilite .gs { font-weight: bold; }
+        .codehilite .gu { color: #800080; font-weight: bold; }
+        .codehilite .gt { color: #a40000; font-weight: bold; }
+        .codehilite .kc { color: #204a87; font-weight: bold; }
+        .codehilite .kd { color: #204a87; font-weight: bold; }
+        .codehilite .kn { color: #204a87; font-weight: bold; }
+        .codehilite .kp { color: #204a87; font-weight: bold; }
+        .codehilite .kr { color: #204a87; font-weight: bold; }
+        .codehilite .kt { color: #204a87; font-weight: bold; }
+        .codehilite .m { color: #0000cf; font-weight: bold; }
+        .codehilite .s { color: #4e9a06; }
+        .codehilite .na { color: #c4a000; }
+        .codehilite .nb { color: #204a87; }
+        .codehilite .nc { color: #000000; }
+        .codehilite .no { color: #000000; }
+        .codehilite .nd { color: #5c35cc; font-weight: bold; }
+        .codehilite .ni { color: #ce5c00; }
+        .codehilite .ne { color: #cc0000; font-weight: bold; }
+        .codehilite .nf { color: #000000; }
+        .codehilite .nl { color: #f57900; }
+        .codehilite .nn { color: #000000; }
+        .codehilite .nt { color: #204a87; font-weight: bold; }
+        .codehilite .nv { color: #000000; }
+        .codehilite .ow { color: #204a87; font-weight: bold; }
+        .codehilite .w { color: #f8f8f8; }
+        .codehilite .mb { color: #0000cf; font-weight: bold; }
+        .codehilite .mf { color: #0000cf; font-weight: bold; }
+        .codehilite .mh { color: #0000cf; font-weight: bold; }
+        .codehilite .mi { color: #0000cf; font-weight: bold; }
+        .codehilite .mo { color: #0000cf; font-weight: bold; }
+        .codehilite .sa { color: #4e9a06; }
+        .codehilite .sb { color: #4e9a06; }
+        .codehilite .sc { color: #4e9a06; }
+        .codehilite .dl { color: #4e9a06; }
+        .codehilite .sd { color: #8f5902; font-style: italic; }
+        .codehilite .s2 { color: #4e9a06; }
+        .codehilite .se { color: #4e9a06; }
+        .codehilite .sh { color: #4e9a06; }
+        .codehilite .si { color: #4e9a06; }
+        .codehilite .sx { color: #4e9a06; }
+        .codehilite .sr { color: #4e9a06; }
+        .codehilite .s1 { color: #4e9a06; }
+        .codehilite .ss { color: #4e9a06; }
+        .codehilite .bp { color: #3465a4; }
+        .codehilite .fm { color: #000000; }
+        .codehilite .vc { color: #000000; }
+        .codehilite .vg { color: #000000; }
+        .codehilite .vi { color: #000000; }
+        .codehilite .vm { color: #000000; }
+        .codehilite .il { color: #0000cf; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
-    <nav class="bg-cyan-600 text-white shadow-lg">
+    <nav class="bg-cyan-600/90 backdrop-blur-md text-white shadow-lg fixed top-0 w-full z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-
+                <!-- Логотип -->
                 <div class="flex-shrink-0">
                     <a href="{% url 'home' %}" class="text-2xl hover:text-cyan-200 transition flex items-center gap-2">
                         <i data-lucide="train-front" class="text-white" style="stroke-width: 2px;"></i>
                         <span>{{ app_name }}</span>
-                        <span class="hidden lg:inline">- {{ app_description }}</span>
+                        <span class="hidden md:inline">- {{ app_description }}</span>
                     </a>
                 </div>
 
+                <!-- Десктопное меню -->
                 <div class="hidden md:flex items-center space-x-6 ml-auto mr-6">
                     <div class="relative group">
                         <button class="hover:text-cyan-200 transition inline-flex items-center gap-1 px-3 py-2 rounded-md">
@@ -53,8 +155,9 @@
                             <i data-lucide="chevron-down" class="w-4 h-4"></i>
                         </button>
                         <div class="absolute left-0 mt-0 pt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-cyan-50">Golang</a>
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-cyan-50">JavaScript</a>
+                            {% for lang in languages %}
+                            <a href="{% url 'topics' lang.slug %}" class="block px-4 py-2 text-gray-800 hover:bg-cyan-50">{{ lang.name }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                     <a href="#" class="hover:text-cyan-200 transition inline-flex items-center gap-1">
@@ -63,9 +166,9 @@
                     </a>
                 </div>
 
+                <!-- Правая часть: профиль / кнопка входа + гамбургер -->
                 <div class="flex items-center space-x-4">
                     {% if user_id %}
-                        <!-- Профиль пользователя с выпадающим меню -->
                         <div class="relative group">
                             <button class="bg-white text-cyan-700 hover:bg-cyan-50 px-3 py-1 rounded-lg transition font-medium flex items-center gap-1 text-sm md:text-base">
                                 <i data-lucide="user" class="w-4 h-4"></i>
@@ -79,25 +182,43 @@
                             </div>
                         </div>
                     {% else %}
-                        <!-- Кнопка "Запомнить меня" -->
                         <button id="rememberMeBtn" class="bg-white text-cyan-700 hover:bg-cyan-50 px-3 py-1 rounded-lg transition font-medium flex items-center gap-1 text-sm md:text-base">
                             <i data-lucide="user-check" class="w-4 h-4"></i>
                             <span class="hidden sm:inline">Запомнить меня</span>
                         </button>
                     {% endif %}
-                    <div class="md:hidden">
-                        <button class="text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </button>
+                    <button id="mobileMenuBtn" class="md:hidden text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div id="mobileMenu" class="mobile-menu md:hidden">
+            <div class="flex flex-col space-y-4">
+                <div>
+                    <button class="w-full text-left text-gray-800 hover:bg-cyan-50 px-3 py-2 rounded-md inline-flex items-center gap-2">
+                        <i data-lucide="square-mouse-pointer" class="w-5 h-5"></i>
+                        <span>Выбрать тренажёр</span>
+                    </button>
+                    <div class="pl-6 mt-1 space-y-1">
+                        {% for lang in languages %}
+                        <a href="{% url 'topics' lang.slug %}" class="block text-gray-600 hover:text-cyan-700">{{ lang.name }}</a>
+                        {% endfor %}
                     </div>
                 </div>
+                <a href="#" class="text-gray-800 hover:bg-cyan-50 px-3 py-2 rounded-md inline-flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                    <span>Добавить карточку</span>
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16">
         {% if messages %}
             <div class="mb-8 space-y-2">
                 {% for message in messages %}
@@ -174,51 +295,45 @@
     <script>
         lucide.createIcons();
 
-        // === Модальное окно "Запомнить меня" ===
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+            });
+            document.addEventListener('click', function(event) {
+                if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                    mobileMenu.classList.remove('open');
+                }
+            });
+        }
+
+        // Модальное окно "Запомнить меня"
         const userModal = document.getElementById('userModal');
         const rememberBtn = document.getElementById('rememberMeBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const userForm = document.getElementById('userForm');
         const formError = document.getElementById('formError');
 
-        function openUserModal() {
-            if (userModal) userModal.classList.add('active');
-        }
-
+        function openUserModal() { if (userModal) userModal.classList.add('active'); }
         function closeUserModal() {
             if (userModal) userModal.classList.remove('active');
             if (formError) formError.classList.add('hidden');
             if (userForm) userForm.reset();
         }
-
-        if (rememberBtn) {
-            rememberBtn.addEventListener('click', openUserModal);
-        }
-
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeUserModal);
-        }
-
-        if (userModal) {
-            userModal.addEventListener('click', function(e) {
-                if (e.target === userModal) closeUserModal();
-            });
-        }
-
+        if (rememberBtn) rememberBtn.addEventListener('click', openUserModal);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeUserModal);
+        if (userModal) userModal.addEventListener('click', function(e) { if (e.target === userModal) closeUserModal(); });
         if (userForm) {
             userForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const username = document.getElementById('username').value.trim();
                 const email = document.getElementById('email').value.trim();
-
                 if (!username) {
-                    if (formError) {
-                        formError.textContent = 'Имя обязательно.';
-                        formError.classList.remove('hidden');
-                    }
+                    if (formError) { formError.textContent = 'Имя обязательно.'; formError.classList.remove('hidden'); }
                     return;
                 }
-
                 fetch('{% url "set_user" %}', {
                     method: 'POST',
                     headers: {
@@ -230,31 +345,19 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'ok') {
-                        location.reload();
-                    } else {
-                        if (formError) {
-                            formError.textContent = data.message || 'Ошибка сервера';
-                            formError.classList.remove('hidden');
-                        }
-                    }
+                    if (data.status === 'ok') location.reload();
+                    else { if (formError) { formError.textContent = data.message || 'Ошибка сервера'; formError.classList.remove('hidden'); } }
                 })
-                .catch(error => {
-                    if (formError) {
-                        formError.textContent = 'Ошибка сети';
-                        formError.classList.remove('hidden');
-                    }
-                });
+                .catch(error => { if (formError) { formError.textContent = 'Ошибка сети'; formError.classList.remove('hidden'); } });
             });
         }
 
-        // === Модальное окно "Редактировать профиль" ===
+        // Редактирование профиля
         const editModal = document.getElementById('editProfileModal');
         const editBtn = document.getElementById('editProfileBtn');
         const closeEditBtn = document.getElementById('closeEditModalBtn');
         const editForm = document.getElementById('editProfileForm');
         const editError = document.getElementById('editFormError');
-
         function openEditModal() {
             if (!editModal) return;
             fetch('{% url "get_user_data" %}')
@@ -268,43 +371,22 @@
                 })
                 .catch(() => {});
         }
-
         function closeEditModal() {
             if (editModal) editModal.classList.remove('active');
             if (editError) editError.classList.add('hidden');
         }
-
-        if (editBtn) {
-            editBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                openEditModal();
-            });
-        }
-
-        if (closeEditBtn) {
-            closeEditBtn.addEventListener('click', closeEditModal);
-        }
-
-        if (editModal) {
-            editModal.addEventListener('click', function(e) {
-                if (e.target === editModal) closeEditModal();
-            });
-        }
-
+        if (editBtn) editBtn.addEventListener('click', function(e) { e.preventDefault(); openEditModal(); });
+        if (closeEditBtn) closeEditBtn.addEventListener('click', closeEditModal);
+        if (editModal) editModal.addEventListener('click', function(e) { if (e.target === editModal) closeEditModal(); });
         if (editForm) {
             editForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const username = document.getElementById('editUsername').value.trim();
                 const email = document.getElementById('editEmail').value.trim();
-
                 if (!username) {
-                    if (editError) {
-                        editError.textContent = 'Имя обязательно.';
-                        editError.classList.remove('hidden');
-                    }
+                    if (editError) { editError.textContent = 'Имя обязательно.'; editError.classList.remove('hidden'); }
                     return;
                 }
-
                 fetch('{% url "update_user" %}', {
                     method: 'POST',
                     headers: {
@@ -316,25 +398,14 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'ok') {
-                        location.reload();
-                    } else {
-                        if (editError) {
-                            editError.textContent = data.message || 'Ошибка';
-                            editError.classList.remove('hidden');
-                        }
-                    }
+                    if (data.status === 'ok') location.reload();
+                    else { if (editError) { editError.textContent = data.message || 'Ошибка'; editError.classList.remove('hidden'); } }
                 })
-                .catch(() => {
-                    if (editError) {
-                        editError.textContent = 'Ошибка сети';
-                        editError.classList.remove('hidden');
-                    }
-                });
+                .catch(() => { if (editError) { editError.textContent = 'Ошибка сети'; editError.classList.remove('hidden'); } });
             });
         }
 
-        // === Выход из профиля ===
+        // Выход
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', function(e) {
@@ -347,11 +418,7 @@
                     }
                 })
                 .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'ok') {
-                        location.reload();
-                    }
-                });
+                .then(data => { if (data.status === 'ok') location.reload(); });
             });
         }
     </script>

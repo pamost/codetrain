@@ -2,7 +2,7 @@ import json
 
 from datetime import datetime
 from django.urls import reverse
-
+import markdown
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import JsonResponse
@@ -13,14 +13,59 @@ from app.models import User, Language, Topic
 def home_page(request):
     languages = Language.objects.all()
     topics = Topic.objects.all()
+    users_count = User.objects.count()
     context = {
         'app_name': 'СodeTrain',
-        'app_description': 'тренажер для изучения языков программирования',
+        'app_description': 'тренажер языков программирования',
         'current_year': datetime.now().year,
         'languages': languages,
-        'topics': topics
+        'topics': topics,
+        'users_count': users_count
     }
     return render(request, 'app/home.html', context)
+
+def topics(request, lang_slug):
+    language = get_object_or_404(Language, slug=lang_slug)
+    topics = language.topics.all().order_by('order', 'name')
+    topics_list = list(topics)
+    selected_topic_id = request.GET.get('topic_id')
+    selected_topic = None
+    prev_topic = None
+    next_topic = None
+
+    if selected_topic_id:
+        selected_topic = get_object_or_404(Topic, id=selected_topic_id, language=language)
+        try:
+            index = topics_list.index(selected_topic)
+            if index > 0:
+                prev_topic = topics_list[index - 1]
+            if index < len(topics_list) - 1:
+                next_topic = topics_list[index + 1]
+        except ValueError:
+            pass
+    elif topics_list:
+        selected_topic = topics_list[0]
+        if len(topics_list) > 1:
+            next_topic = topics_list[1]
+
+    if selected_topic:
+        selected_topic.html_description = markdown.markdown(
+            selected_topic.description or '',
+            extensions=['fenced_code', 'codehilite']
+        )
+
+    context = {
+        'title': f'{language.name} - темы',
+        'current_year': datetime.now().year,
+        'language': language,
+        'topics': topics,
+        'selected_topic': selected_topic,
+        'prev_topic': prev_topic,
+        'next_topic': next_topic,
+        'app_name': 'CodeTrain',
+        'app_description': 'тренажер для программистов',
+    }
+    return render(request, 'app/topics.html', context)
 
 @csrf_exempt
 def set_user(request):

@@ -1,4 +1,4 @@
-from app.models import User
+from app.models import User, Language
 
 def user_context(request):
     user_id = request.session.get('user_id')
@@ -15,3 +15,6 @@ def user_context(request):
         'user_id': user_id,
         'username': username,
     }
+
+def languages_context(request):
+    return {'languages': Language.objects.all()}

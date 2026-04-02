@@ -1,33 +1,106 @@
 {% extends 'app/base.html' %}
 
-{% block title %}Представьтесь{% endblock %}
+{% block title %}Моя статистика{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-8">
-    <div class="bg-white rounded-xl shadow-md p-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Давайте познакомимся</h1>
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Имя</label>
-                <input type="text" name="username" 
-                       class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent" 
-                       placeholder="Ваше имя" required>
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-lucide="bar-chart-2" class="w-6 h-6 text-cyan-600"></i>
+        Моя статистика
+    </h1>
+
+    {% if attempts %}
+        <!-- Краткая сводка -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="clipboard-list" class="w-8 h-8 text-cyan-600"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Всего тестов пройдено</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ attempts|length }}</p>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Email (необязательно)</label>
-                <input type="email" name="email" 
-                       class="w-full px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent" 
-                       placeholder="example@mail.ru">
+            <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="trending-up" class="w-8 h-8 text-cyan-600"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Средний результат</p>
+                        <p class="text-2xl font-bold text-gray-800">
+                            {% with total_score=0 total_questions=0 %}
+                                {% for a in attempts %}
+                                    {% with total_score=total_score|add:a.score total_questions=total_questions|add:a.total %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            {# Более простой способ вычисления среднего через шаблонный фильтр #}
+                            {% with sum=0 count=0 %}
+                                {% for a in attempts %}
+                                    {% with sum=sum|add:a.score count=count|add:a.total %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            {# Вместо этого используем обычный цикл с добавлением в представлении #}
+                            <!-- Для точного расчёта лучше передавать average из представления -->
+                            {{ average_percent|default:"—" }}%
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-between items-center pt-2">
-                <button type="submit" class="bg-cyan-700 hover:bg-cyan-800 text-white font-semibold px-6 py-2 rounded-lg transition shadow-sm">
-                    Продолжить
-                </button>
-                <a href="{% url 'home' %}" class="text-gray-500 hover:text-gray-700 transition">Вернуться на главную</a>
+        </div>
+
+        <!-- Десктопная таблица -->
+        <div class="hidden md:block bg-white rounded-xl shadow overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тема</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Результат</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Дата</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for attempt in attempts %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-gray-800">{{ attempt.topic.name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-semibold">{{ attempt.score }} / {{ attempt.total }}</span>
+                            <span class="text-gray-500 text-sm">({% widthratio attempt.score attempt.total 100 %}%)</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-500 text-sm">{{ attempt.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Мобильные карточки -->
+        <div class="md:hidden space-y-4">
+            {% for attempt in attempts %}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">{{ attempt.topic.name }}</h3>
+                        <p class="text-2xl font-bold text-cyan-700 mt-1">{{ attempt.score }} / {{ attempt.total }}</p>
+                        <p class="text-gray-500 text-sm">{% widthratio attempt.score attempt.total 100 %}% правильных</p>
+                    </div>
+                    <div class="text-right text-gray-400 text-xs">
+                        {{ attempt.created_at|date:"d.m.Y" }}<br>
+                        {{ attempt.created_at|date:"H:i" }}
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Пустое состояние -->
+        <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+            <i data-lucide="bar-chart-2" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+            <p class="text-gray-500 text-lg">Вы ещё не проходили ни одного теста.</p>
+            <a href="{% url 'home' %}" class="inline-block mt-4 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg transition">
+                Начать обучение
+            </a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
