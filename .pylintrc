@@ -1,5 +1,6 @@
 [MASTER]
 ignore=migrations
+load-plugins=pylint_django
 
 [MESSAGES CONTROL]
 disable=C0111,  # missing-docstring
